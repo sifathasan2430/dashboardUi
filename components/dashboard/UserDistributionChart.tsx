@@ -31,7 +31,7 @@ export function UserDistributionChart() {
        const filters=useFilterStore((state)=>state.filters)
   const {data:user,isLoading,isError,error}=useQuery({
       queryKey:["user",filters],
-      queryFn:()=>getData<UserProps[]>("http://localhost:3000/api/user",filters),
+      queryFn:()=>getData<UserProps[]>(`${process.env.url}/api/user`,filters),
      
       staleTime:5*60*1000, 
      })

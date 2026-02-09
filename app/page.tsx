@@ -21,7 +21,7 @@ export default function Dashboard() {
    
    const {data:stats,isLoading,isError,error,isFetching}=useQuery({
     queryKey:["stats",filters],
-    queryFn:()=>getData<StatsProps[]>("http://localhost:3000/api/stats",filters),
+    queryFn:()=>getData<StatsProps[]>(`${process.env.url}/api/stats`,filters),
    
     staleTime:5*60*1000, // 5 minutes
    })
