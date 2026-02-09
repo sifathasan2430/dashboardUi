@@ -4,6 +4,10 @@
 import { Pie, PieChart, Cell, ResponsiveContainer, Legend } from "recharts"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { userData } from "@/lib/mock-data"
+import { useFilterStore } from "@/app/createstore/createStore"
+import { getData } from "@/app/serverApi/api"
+import { useQuery } from "@tanstack/react-query"
+import { UserProps } from "@/app/types/types"
 
 const chartConfig = {
   count: {
@@ -24,6 +28,17 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function UserDistributionChart() {
+       const filters=useFilterStore((state)=>state.filters)
+  const {data:user,isLoading,isError,error}=useQuery({
+      queryKey:["user",filters],
+      queryFn:()=>getData<UserProps[]>("http://localhost:3000/api/user",filters),
+     
+      staleTime:5*60*1000, 
+     })
+  if (isError) {
+    return <div>Error: {error.message}</div>;
+  }
+console.log(user,'this is user data')
   return (
     <div className="rounded-xl border bg-white p-6 shadow-sm h-full">
       <div className="pb-4">
@@ -34,13 +49,13 @@ export function UserDistributionChart() {
         <PieChart>
           <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
           <Pie
-            data={userData}
+            data={isLoading?userData:user}
             dataKey="count"
             nameKey="type"
             innerRadius={60}
             strokeWidth={5}
           >
-            {userData.map((entry, index) => (
+            {user?.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.fill} />
             ))}
           </Pie>

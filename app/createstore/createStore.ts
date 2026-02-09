@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 
 // Define types for state & actions
-type Filters = {
+export type Filters = {
     range:string,
     role:string,
 }

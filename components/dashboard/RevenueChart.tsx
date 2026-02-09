@@ -5,7 +5,11 @@ import { Bar, BarChart, Line, LineChart, XAxis, YAxis, CartesianGrid, Responsive
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { monthlyData } from "@/lib/mock-data"
-import { TrendingUp } from "lucide-react"
+import { useQuery } from "@tanstack/react-query"
+import { useFilterStore } from "@/app/createstore/createStore"
+import { getData } from "@/app/serverApi/api"
+import { RevenueProps } from "@/app/types/types"
+
 
 const chartConfig = {
   revenue: {
@@ -19,7 +23,20 @@ const chartConfig = {
 } satisfies ChartConfig
 
 
+
+
 export function RevenueChart() {
+     const filters=useFilterStore((state)=>state.filters)
+const {data:order,isLoading,isError,error}=useQuery({
+    queryKey:["order",filters],
+    queryFn:()=>getData<RevenueProps[]>("http://localhost:3000/api/order",filters),
+   
+    staleTime:5*60*1000, // 5 minutes
+   })
+if (isError) {
+    return <div>Error: {error.message}</div>;
+  }
+
   return (
     <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
       {/* Revenue Line Chart */}
@@ -31,7 +48,7 @@ export function RevenueChart() {
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[300px] w-full">
             <LineChart 
-              data={monthlyData} 
+              data={isLoading?monthlyData:order} 
               margin={{ top: 5, right: 10, left: 10, bottom: 0 }}
             >
               <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-muted" />
@@ -68,7 +85,7 @@ export function RevenueChart() {
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig} className="h-[300px] w-full">
-            <BarChart data={monthlyData}>
+            <BarChart data={isLoading?monthlyData:order}>
               <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-muted" />
               <XAxis dataKey="month" tickLine={true} axisLine={true} tickMargin={8} />
               <YAxis hide />

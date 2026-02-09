@@ -16,7 +16,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
   
 
   return (
-    <div className="flex min-h-screen w-full bg-slate-50/50">
+    <div className="flex min-h-screen w-full  bg-slate-50/50">
       {/* Desktop Sidebar */}
       <aside className="hidden w-64 border-r bg-white lg:block">
         <SidebarContent />
@@ -57,7 +57,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex  items-center gap-4">
             <Button variant="ghost" size="icon" className="relative">
               <Bell className="h-5 w-5 text-slate-600" />
               <span className="absolute top-2 right-2 flex h-2 w-2 rounded-full bg-indigo-600 ring-2 ring-white" />
@@ -76,10 +76,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
         </SelectGroup>
       </SelectContent>
     </Select>
-     <Button onClick={()=>setClear()} className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700">
+      <Button onClick={()=>setClear()} className="hidden w-full sm:block sm:w-auto bg-indigo-600 hover:bg-indigo-700">
           Reset
           </Button>
             </div>
+           
          
         </header>
 

@@ -19,6 +19,10 @@ import {
 import { trafficData } from "@/lib/mock-data"
 import { CardFooter,Card,CardContent, CardHeader, CardTitle, CardDescription } from "../ui/card"
 import { TrendingUp } from "lucide-react"
+import { getData } from "@/app/serverApi/api"
+import { useQuery } from "@tanstack/react-query"
+import { useFilterStore } from "@/app/createstore/createStore"
+import { TrafficProps } from "@/app/types/types"
 
 const chartConfig = {
   organic: {
@@ -40,13 +44,21 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function TrafficSourceChart() {
-  const totalVisitors = trafficData.reduce(
-    (sum, item) => sum + item.visitors,
-    0
-  )
-const chartData = [{ month: "February", source: "organic", visitors: 4500 },
-    
-]
+  const filters=useFilterStore((state)=>state.filters)
+  const {data:traffic,isLoading,isError,error}=useQuery({
+    queryKey:["traffic",filters],
+    queryFn:()=>getData<TrafficProps[]>("http://localhost:3000/api/traffic",filters),
+    staleTime:5*60*1000,
+  })
+ 
+  if (isError) {
+    return <div>Error: {error.message}</div>;
+  }
+  // const totalVisitors = traffic?.reduce(
+  //   (sum, item) => sum + item.visitors,
+  //   0
+  // )
+ console.log()
   return (
     <div className="rounded-xl border bg-background p-6 shadow-sm">
       {/* Header */}
@@ -70,7 +82,7 @@ const chartData = [{ month: "February", source: "organic", visitors: 4500 },
           className="mx-auto aspect-square max-h-[250px]"
         >
           <RadialBarChart
-            data={trafficData}
+            data={isLoading ? trafficData : traffic}
             startAngle={-90}
             endAngle={380}
             innerRadius={30}
@@ -97,7 +109,7 @@ const chartData = [{ month: "February", source: "organic", visitors: 4500 },
 
     
       <div className="mt-6 grid grid-cols-2 gap-4 border-t pt-4">
-        {trafficData.map((item) => {
+        { traffic?.map((item) => {
           const configKey = item.source as keyof typeof chartConfig
 
           return (

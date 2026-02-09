@@ -9,13 +9,29 @@ import { TrafficSourceChart } from "@/components/dashboard/TrafficSourceChart"
 
 import { useFilterStore } from "./createstore/createStore"
 
+import { getData } from "./serverApi/api"
+import { useQuery } from "@tanstack/react-query"
+import { KPICardProps, StatsProps } from "./types/types"
+import KpiCardSkeletons from "@/components/skeletons/KpiCardSkeletons"
+
 
 export default function Dashboard() {
    const filters=useFilterStore((state)=>state.filters)
-   console.log(filters)
    
    
-  
+   const {data:stats,isLoading,isError,error,isFetching}=useQuery({
+    queryKey:["stats",filters],
+    queryFn:()=>getData<StatsProps[]>("http://localhost:3000/api/stats",filters),
+   
+    staleTime:5*60*1000, // 5 minutes
+   })
+
+ 
+ 
+
+  if (isError) {
+    return <div>Error: {error.message}</div>;
+  }
   return (
     <DashboardShell>
       <div className="space-y-8">
@@ -31,12 +47,20 @@ export default function Dashboard() {
         </div>
 
         {/* Section 2: KPI Grid (1 col Mobile, 2 col Tablet, 4 col Laptop) */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <KPICard title="Total Revenue" value="$54,230" description="vs last month" trend={12.5} />
-          <KPICard title="Total Users" value="1,245" description="active this week" trend={-2.1} />
-          <KPICard title="Total Orders" value="342" description="processed" trend={8.2} />
-          <KPICard title="Conversion" value="4.3%" description="visitor to lead" trend={1.1} />
-        </div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+     {
+      isLoading && [1,2,3,4].map((i)=><KpiCardSkeletons key={i}/>)
+     }
+      {stats &&  stats.map((stat: KPICardProps) => (
+        <KPICard 
+          key={stat.value}
+          title={stat.title}
+          value={stat.value}
+          trend={stat.trend}
+          description={stat.description}
+        />
+      ))}
+    </div>
 
         {/* Section 3: Charts (Stack on Mobile/Tablet, 2:1 ratio on Laptop) */}
        <div className="grid gap-6 grid-cols-1 lg:grid-cols-3">
