@@ -1,65 +1,62 @@
-import Image from "next/image";
+"use client"
+import { DashboardShell } from "@/components/layout/DashboardShell"
+import { KPICard } from "@/components/dashboard/KPICard"
+import { RevenueChart } from "@/components/dashboard/RevenueChart"
+import { UserDistributionChart } from "@/components/dashboard/UserDistributionChart"
+import { Button } from "@/components/ui/button"
+import { Download } from "lucide-react"
+import { TrafficSourceChart } from "@/components/dashboard/TrafficSourceChart"
 
-export default function Home() {
+import { useFilterStore } from "./createstore/createStore"
+
+
+export default function Dashboard() {
+   const filters=useFilterStore((state)=>state.filters)
+   console.log(filters)
+   
+   
+  
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <DashboardShell>
+      <div className="space-y-8">
+        {/* Section 1: Title & Main Actions */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-slate-900">Analytics Dashboard</h1>
+            <p className="text-slate-500 font-medium">Monitoring period: Jan 1 - Feb 8, 2026</p>
+          </div>
+          <Button className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700">
+            <Download className="mr-2 h-4 w-4" /> Export Report
+          </Button>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Section 2: KPI Grid (1 col Mobile, 2 col Tablet, 4 col Laptop) */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <KPICard title="Total Revenue" value="$54,230" description="vs last month" trend={12.5} />
+          <KPICard title="Total Users" value="1,245" description="active this week" trend={-2.1} />
+          <KPICard title="Total Orders" value="342" description="processed" trend={8.2} />
+          <KPICard title="Conversion" value="4.3%" description="visitor to lead" trend={1.1} />
         </div>
-      </main>
-    </div>
-  );
+
+        {/* Section 3: Charts (Stack on Mobile/Tablet, 2:1 ratio on Laptop) */}
+       <div className="grid gap-6 grid-cols-1 lg:grid-cols-3">
+          <div className="lg:col-span-3">
+            <RevenueChart />
+          </div>
+         
+        </div>
+
+        {/* Section 4: Advanced Insights */}
+        <div className="grid gap-6 grid-cols-1 lg:grid-cols-3">
+           <div className="lg:col-span-1">
+            <UserDistributionChart />
+          </div>
+            <div className="lg:col-span-1">
+                <TrafficSourceChart />
+            </div>
+           
+        </div>
+      </div>
+    </DashboardShell>
+  )
 }
