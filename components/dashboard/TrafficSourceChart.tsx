@@ -47,7 +47,7 @@ export function TrafficSourceChart() {
   const filters=useFilterStore((state)=>state.filters)
   const {data:traffic,isLoading,isError,error}=useQuery({
     queryKey:["traffic",filters],
-    queryFn:()=>getData<TrafficProps[]>(`${process.env.url}/api/traffic`,filters),
+    queryFn:()=>getData<TrafficProps[]>(`${process.env.NEXT_PUBLIC_API_URL}//api/traffic`,filters),
     staleTime:5*60*1000,
   })
  
