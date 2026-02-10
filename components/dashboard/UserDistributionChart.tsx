@@ -37,9 +37,7 @@ export function UserDistributionChart() {
      })
   if (isError) {
     return <div>Error: {error.message}</div>;
-  }
-console.log(user,'this is user data')
-  return (
+  }  return (
     <div className="rounded-xl border bg-white p-6 shadow-sm h-full">
       <div className="pb-4">
         <h3 className="font-semibold leading-none tracking-tight">User Distribution</h3>

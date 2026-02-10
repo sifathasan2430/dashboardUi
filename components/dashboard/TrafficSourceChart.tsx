@@ -54,11 +54,11 @@ export function TrafficSourceChart() {
   if (isError) {
     return <div>Error: {error.message}</div>;
   }
-  // const totalVisitors = traffic?.reduce(
-  //   (sum, item) => sum + item.visitors,
-  //   0
-  // )
- console.log()
+  const totalVisitors = traffic && traffic?.reduce(
+    (sum, item) => sum + item.visitors,
+    0
+  )
+
   return (
     <div className="rounded-xl border bg-background p-6 shadow-sm">
       {/* Header */}
