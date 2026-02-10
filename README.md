@@ -29,7 +29,7 @@ Follow these steps to get the project running locally:
     ```
 
 4.  **Open the app:**
-    Navigate to `http://localhost:3000` in your browser.
+    Navigate to `${process.env.NEXT_PUBLIC_API_URL}` in your browser.
 
 ---
 ## 🔑 Environment Variables

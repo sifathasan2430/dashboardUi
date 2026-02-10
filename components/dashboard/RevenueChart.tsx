@@ -29,7 +29,7 @@ export function RevenueChart() {
      const filters=useFilterStore((state)=>state.filters)
 const {data:order,isLoading,isError,error}=useQuery({
     queryKey:["order",filters],
-    queryFn:()=>getData<RevenueProps[]>(`http://localhost:3000//api/order`,filters),
+    queryFn:()=>getData<RevenueProps[]>(`${process.env.NEXT_PUBLIC_API_URL}//api/order`,filters),
    
     staleTime:5*60*1000, // 5 minutes
    })
