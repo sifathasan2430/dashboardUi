@@ -36,7 +36,7 @@ Follow these steps to get the project running locally:
 
 To run this project, you will need to add the following environment variables to your `.env` file:
 
-`NEXT_PUBLIC_API_URL` = https://dashboard-ui-two-omega.vercel.app/  
+`NEXT_PUBLIC_API_URL` = [https://dashboard-ui-two-omega.vercel.app/ ](https://dashboard-ui-two-omega.vercel.app) 
 
 
 ## 🛠 Tech Stack
